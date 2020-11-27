@@ -3,12 +3,12 @@ package main
 import (
 	"context"
 	"fmt"
+	"grpc-go-course/greet/greetpb"
 	"io"
 	"log"
 	"net"
 	"strconv"
 
-	"github.com/ulaskasim/grpc-go-course/greet/greetpb"
 	"google.golang.org/grpc"
 )
 
@@ -57,6 +57,30 @@ func (*server) LongGreet(reqStream greetpb.GreetService_LongGreetServer) error {
 
 		firstName := req.GetGreeting().GetFirstName()
 		result += firstName + "! "
+	}
+}
+
+func (*server) GreetEveryone(reqStream greetpb.GreetService_GreetEveryoneServer) error {
+	fmt.Printf("GreetEveryone function was invoked with a streaming request %v\n", reqStream)
+
+	for {
+		req, err := reqStream.Recv()
+		if err == io.EOF {
+			return nil
+		}
+		if err != nil {
+			log.Fatalf("Error while reading client stream: %v", err)
+			return err
+		}
+		firstName := req.GetGreeting().GetFirstName()
+		result := "Hello " + firstName + "! "
+		streamErr := reqStream.Send(&greetpb.GreetEveryoneResponse{
+			Result: result,
+		})
+		if streamErr != nil {
+			log.Fatalf("Error while sending data to client: %v", err)
+			return streamErr
+		}
 	}
 }
 

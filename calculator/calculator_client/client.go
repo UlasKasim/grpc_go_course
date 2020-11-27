@@ -3,11 +3,11 @@ package main
 import (
 	"context"
 	"fmt"
+	"grpc-go-course/calculator/calculatorpb"
 	"io"
 	"log"
 	"time"
 
-	"github.com/ulaskasim/grpc-go-course/calculator/calculatorpb"
 	"google.golang.org/grpc"
 )
 
