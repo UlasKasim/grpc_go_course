@@ -61,7 +61,7 @@ func (*server) LongGreet(reqStream greetpb.GreetService_LongGreetServer) error {
 }
 
 func (*server) GreetEveryone(reqStream greetpb.GreetService_GreetEveryoneServer) error {
-	fmt.Printf("GreetEveryone function was invoked with a streaming request %v\n", reqStream)
+	fmt.Printf("GreetEveryone function was invoked with a streaming request %v\n", reqStream.Context())
 
 	for {
 		req, err := reqStream.Recv()
