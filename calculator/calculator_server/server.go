@@ -81,15 +81,15 @@ func (*server) FindMaximum(reqStream calculatorpb.CalculatorService_FindMaximumS
 		number := req.GetNumber()
 		if number > resultNumber {
 			resultNumber = number
+			streamErr := reqStream.Send(&calculatorpb.FindMaximumResponse{
+				Average: resultNumber,
+			})
+			if streamErr != nil {
+				log.Fatalf("Error while sending data to client: %v", err)
+				return streamErr
+			}
 		}
 
-		streamErr := reqStream.Send(&calculatorpb.FindMaximumResponse{
-			Average: resultNumber,
-		})
-		if streamErr != nil {
-			log.Fatalf("Error while sending data to client: %v", err)
-			return streamErr
-		}
 	}
 }
 
